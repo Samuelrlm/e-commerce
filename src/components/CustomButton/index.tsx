@@ -14,7 +14,9 @@ export default function CustomButton({
     function getStyles() {
         switch (variant) {
             case "primary":
-                return ``
+                return `bg-gradient-to-r from-[#5593f7] to-[#1d4fd7] hover:shadow-xl
+                 hover:shadow-[#4896ff26] transition-all duration-300 ease-in-out
+                  cursor-pointer text-[#1f1f1f]`
         }
     }
 
