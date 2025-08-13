@@ -42,6 +42,7 @@ export default function CustomInput({
           placeholder={placeholder}
           required={required}
           className={`
+            ${label && "mt-2"}
             ${
               icon && type === "password" && "px-10" ||
               icon && type !== "password" && "pl-10" ||

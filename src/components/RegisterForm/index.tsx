@@ -1,5 +1,7 @@
 import { FiUser } from "react-icons/fi";
 import CustomInput from "../CustomInput";
+import { CiMail } from "react-icons/ci";
+import { GoLock } from "react-icons/go";
 
 export default function RegisterForm() {
     return (
@@ -28,10 +30,24 @@ export default function RegisterForm() {
                         required={true} 
                     />
                     <CustomInput
-                        label="Nome Completo"
-                        type="text"
-                        placeholder="Seu nome completo"
-                        icon={<FiUser />}
+                        label="Email"
+                        type="email"
+                        placeholder="seu@email.com"
+                        icon={<CiMail />}
+                        required={true} 
+                    />
+                    <CustomInput
+                        label="Senha"
+                        type="password"
+                        placeholder="••••••••"
+                        icon={<GoLock />}
+                        required={true} 
+                    />
+                    <CustomInput
+                        label="Confirmar Senha"
+                        type="password"
+                        placeholder="••••••••"
+                        icon={<GoLock />}
                         required={true} 
                     />
                 </form>
