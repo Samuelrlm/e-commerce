@@ -29,7 +29,9 @@ export default function CustomButton({
     return (
         <button
             type={type}
-            className={`w-full rounded-lg text-lg font-medium ${getStyles()}`}
-        ></button>
+            className={`w-full rounded-lg text-lg font-medium ${getStyles()} ${className}`}
+        >
+            {children}
+        </button>
     )
 }
