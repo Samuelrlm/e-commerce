@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils"
 import { cva, type VariantProps } from "class-variance-authority"
 
 
@@ -7,7 +8,8 @@ const badgeVariants = cva(
         variants: {
            variant: {
                 default: "border-transparent bg-[#5593f7] hover:bg-[#5593f7]/80",
-                destructive: "border-transparent bg-red-500 hover:bg-red-500/80"
+                destructive: "border-transparent bg-red-500 hover:bg-red-500/80",
+                outline: "text-[#F1F2F3]"
            } 
         },
         defaultVariants: {
@@ -22,6 +24,11 @@ export interface BadgeProps
 
 export default function Badge({className, variant, ...props}: BadgeProps){
     return (
-        <div></div>
+        <div className={
+            cn(
+                badgeVariants({variant}),
+                className
+            )
+        } {...props}/>
     )
 }
