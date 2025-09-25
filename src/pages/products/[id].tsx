@@ -1,41 +1,74 @@
 import Breadcrumb from "@/components/Breadcrumb";
+import CustomButton from "@/components/CustomButton";
 import PageWrapper from "@/components/PageWrapper";
 import ProductImages from "@/components/ProductImages";
 import ProductInfo from "@/components/ProductInfo";
+import ProductReviews from "@/components/ProductReviews";
 import Skeleton from "@/components/Skeleton";
 import ProductSkeleton from "@/components/Skeletons/ProductSkeletonPage";
+import StarsRating from "@/components/StarsRating";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import customToast from "@/helpers/customToast";
 import getProductMock from "@/helpers/getProductMock";
+import requestApi from "@/helpers/requestApi";
 import { ProductDetails } from "@/interfaces/productDetails";
+import instance from "@/services/api";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ProductPage(){
     const router = useRouter();
     const { id } = router.query;
-    const [product, setProduct] = useState<ProductDetails>({} as ProductDetails)
+    const [product, setProduct] = useState<ProductDetails | null>(null)
     const [loading, setLoading] = useState(true)
     
     useEffect(() => {
         async function fetchProduct(){
             setLoading(true)
 
-            if(id){
-                const product = getProductMock({ id: Number(id)})
+            try {
+                if(!id) return
+                
+                const response = await requestApi({
+                    url: `/products/${id}`,
+                    method: "GET"
+                })
 
-                if(product){
-                    setProduct(product)
-                }
-            }
-
-            // setTimeout(() => {
+                setProduct(response.data)
+            } catch (error) {
+                console.error(error)
+                customToast.error({
+                    message: "Erro ao buscar produto"
+                })
+            } finally {
                 setLoading(false)
-            // }, 3000)
+            }
         }
 
         fetchProduct()
     }, [id])
     
+    if(!product) {
+        return (
+            <PageWrapper>
+                <div className="flex flex-col items-center justify-center">
+                    <h1 className="text-2xl font-bold mb-4">
+                        Produto não encontrado
+                    </h1>
+                    <Link href="/">
+                        <CustomButton
+                            className="h-[45px] px-4"
+                        >
+                            Voltar para a home
+                        </CustomButton>
+                    </Link>
+                </div>
+            </PageWrapper>
+        )
+    }
+
     return (
         <PageWrapper>
             {loading ? (
@@ -85,11 +118,44 @@ export default function ProductPage(){
                         </TabsContent>
                         
                         <TabsContent value="specifications">
-                            <p>Aqui é as especificações</p>
+                            <div className="rounded-lg border border-[#343942] bg-[#181b20]">
+                                <div className="p-6">
+                                    <h3 className="text-lg font-semibold mb-4">
+                                        Especificações Técnicas
+                                    </h3>
+                                    <div className="space-y-3">
+                                        {
+                                            Object.entries(product?.specifications || {}).map(([key, value]) => {
+                                                return (
+                                                    <div key={value} className="flex justify-between py-2 border-b border-[#2c313a]/50">
+                                                        <span className="font-medium">{key}</span>
+                                                        <span className="text-gray-400">{value}</span>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                </div>
+                            </div>
                         </TabsContent>
                         
                         <TabsContent value="reviews">
-                            <p>Aqui é as avaliações</p>
+                            <div className="rounded-lg border border-[#343942]
+                             bg-[#181B20] shadow-md">
+                                <div className="p-6">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <h3 className="text-lg font-semibold">
+                                            Avaliações dos clientes
+                                        </h3>
+                                        <StarsRating
+                                            rating={product?.rating}
+                                            reviews={product?.reviews}
+                                            size={16}
+                                        />
+                                    </div>
+                                    <ProductReviews id={product?.id}/>
+                                </div>
+                            </div>
                         </TabsContent>
                     </Tabs>
                 </>

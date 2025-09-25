@@ -2,7 +2,7 @@ import { FaStar } from "react-icons/fa";
 
 interface StarsRatingProps {
     rating: number;
-    reviews: number;
+    reviews?: number;
     size?: number;
 }
 
@@ -27,7 +27,10 @@ export default function StarsRating({ rating, reviews, size = 12 }: StarsRatingP
           );
         })}
       </div>
-      <span className="text-xs">{rating} &nbsp;({reviews})&nbsp;</span>
+      <span className="text-xs">
+        {rating}
+        {reviews && ` (${reviews})`}
+      </span>
     </div>
   );
 }
